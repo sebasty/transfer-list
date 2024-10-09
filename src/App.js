@@ -1,23 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import DevLangList from "./components/DevLangList";
+import UseDevLangState from "./components/UseDevLangState";
+import DevLangButtons from "./components/DevLangButtons";
+import noSelection from "./utils/NoSelection";
+import moveCheckedDevLang from "./utils/MoveCheckedDevLang";
+import Modal from "./components/Modal";
+import "./App.scss";
 
 function App() {
+  const { leftSide, setLeftSide, rightSide, setRightSide } = UseDevLangState();
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsModalOpen(true);
+    }, 2000);
+
+    return () => clearTimeout(timer); 
+  }, []);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
+      <div className="container">
+        <div className="left-side">
+          <DevLangList list={leftSide} setList={setLeftSide} />
+        </div>
+        <div className="buttons-container">
+          <DevLangButtons
+            leftSide={leftSide}
+            setLeftSide={setLeftSide}
+            rightSide={rightSide}
+            setRightSide={setRightSide}
+            noSelection={noSelection}
+            moveCheckedDevLang={moveCheckedDevLang}
+          />
+        </div>
+        <div className="right-side">
+          <DevLangList list={rightSide} setList={setRightSide} />
+        </div>
+      </div>
     </div>
   );
 }
